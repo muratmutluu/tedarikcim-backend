@@ -2,8 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { ConfigService } from '@nestjs/config';
 import { Config } from './config/config-schema';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { setupSwagger } from './app/common/docs/swagger';
+import { HttpExceptionFilter } from './app/common/exception/http-exception.filter';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -17,6 +18,20 @@ async function bootstrap() {
   const swaggerEnabled = configService.get<boolean>(
     'SWAGGER_ENABLED',
     environment === 'development',
+  );
+
+  // Global Exception Filter
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  // Request Validation
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+      stopAtFirstError: false,
+    }),
   );
 
   // Swagger Documentation

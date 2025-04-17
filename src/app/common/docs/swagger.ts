@@ -60,7 +60,7 @@ export const setupSwagger = (app: INestApplication): void => {
 
   // Add custom Swagger configuration
   SwaggerModule.setup('api/docs', app, document, {
-    explorer: true,
+    // explorer: true,
     swaggerOptions: {
       persistAuthorization: true,
       displayRequestDuration: true,
