@@ -43,7 +43,7 @@ export class UserController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get user by ID' })
+  @ApiOperation({ summary: 'Get a user by ID' })
   @ApiResponse({
     status: 200,
     description: 'Returns the user with the specified ID',
@@ -54,7 +54,7 @@ export class UserController {
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Update user by ID' })
+  @ApiOperation({ summary: 'Update a user by ID' })
   @ApiResponse({
     status: 200,
     description: 'User has been successfully updated',
@@ -68,7 +68,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete user' })
+  @ApiOperation({ summary: 'Delete a user by ID' })
   @ApiResponse({
     status: 200,
     description: 'User has been successfully deleted',
