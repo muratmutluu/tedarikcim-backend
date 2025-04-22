@@ -44,7 +44,11 @@ export class CustomerController {
   findAll(
     @Query() paginationDto: PaginationDto,
   ): Promise<CustomerFindAllResult> {
-    return this.customerService.findAll(paginationDto);
+    if (paginationDto.page || paginationDto.pageSize) {
+      return this.customerService.findAllWithPagination(paginationDto);
+    } else {
+      return this.customerService.findAll();
+    }
   }
 
   @ApiOperation({ summary: 'Get a customer by ID' })

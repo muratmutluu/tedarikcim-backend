@@ -34,6 +34,7 @@ const command = `npm run typeorm migration:generate ${migrationsDir}/${migration
         '\x1b[31m%s\x1b[0m',
         '❌ An error occurred while generating the migration:',
       );
+      console.error(error);
       console.error(stderr);
       return;
     }

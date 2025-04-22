@@ -23,7 +23,9 @@ export class CustomerService {
     return this.customerRepository.save(customer);
   }
 
-  async findAll(paginationDto: PaginationDto): Promise<CustomerFindAllResult> {
+  async findAllWithPagination(
+    paginationDto: PaginationDto,
+  ): Promise<CustomerFindAllResult> {
     const { page = 1, pageSize = 10 } = paginationDto;
 
     const [customers, total] = await this.customerRepository.findAndCount({
@@ -32,7 +34,17 @@ export class CustomerService {
       order: { createdAt: 'DESC' },
     });
 
-    return { customers, total };
+    return { total, customers };
+  }
+
+  async findAll(): Promise<CustomerFindAllResult> {
+    const customers = await this.customerRepository.find({
+      order: { createdAt: 'DESC' },
+    });
+
+    const total = customers.length;
+
+    return { total, customers };
   }
 
   async findOneById(id: number): Promise<CustomerEntity> {

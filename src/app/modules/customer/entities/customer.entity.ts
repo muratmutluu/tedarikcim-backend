@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseEntity } from '../../../common/entities/base.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany, Relation } from 'typeorm';
+import { TransactionEntity } from '../../transactions/entities/transaction.entity';
 
 @Entity('customers')
 export class CustomerEntity extends BaseEntity {
@@ -56,6 +57,20 @@ export class CustomerEntity extends BaseEntity {
     description: 'Balance of the customer',
     default: 0,
   })
-  @Column({ type: 'decimal', default: 0 })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    default: 0,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => parseFloat(value),
+    },
+  })
   balance: number;
+
+  @OneToMany(() => TransactionEntity, (transaction) => transaction.customer, {
+    onDelete: 'CASCADE',
+  })
+  transactions: Relation<TransactionEntity[]>;
 }

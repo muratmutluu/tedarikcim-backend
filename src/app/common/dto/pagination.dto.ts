@@ -17,7 +17,7 @@ export class PaginationDto {
     { message: 'Page must be a valid number' },
   )
   @Min(1, { message: 'Page number must be at least 1' })
-  page?: number = 1;
+  page?: number;
 
   @ApiProperty({
     description: 'Number of items per page',
@@ -35,5 +35,5 @@ export class PaginationDto {
   )
   @Min(1, { message: 'Page size must be at least 1' })
   @Max(100, { message: 'Page size cannot exceed 100 items' })
-  pageSize?: number = 10;
+  pageSize?: number;
 }

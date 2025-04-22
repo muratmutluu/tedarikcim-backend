@@ -15,7 +15,7 @@ export class CustomerSchema1744965907784 implements MigrationInterface {
                 "email" character varying,
                 "taxOffice" character varying,
                 "taxNumber" character varying,
-                "balance" numeric NOT NULL DEFAULT '0',
+                "balance" numeric(10, 2) NOT NULL DEFAULT '0',
                 CONSTRAINT "PK_customers" PRIMARY KEY ("id")
             )
         `);
@@ -23,7 +23,7 @@ export class CustomerSchema1744965907784 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-            DROP TABLE "customer_entity"
+            DROP TABLE "customers"
         `);
   }
 }

@@ -6,6 +6,7 @@ import { typeOrmModuleAsyncOptions } from 'src/database/data-source';
 import { UserModule } from './modules/user/user.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CustomerModule } from './modules/customer/customer.module';
+import { TransactionModule } from './modules/transactions/transaction.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { CustomerModule } from './modules/customer/customer.module';
     TypeOrmModule.forRootAsync(typeOrmModuleAsyncOptions),
     UserModule,
     CustomerModule,
+    TransactionModule,
   ],
   controllers: [],
   providers: [

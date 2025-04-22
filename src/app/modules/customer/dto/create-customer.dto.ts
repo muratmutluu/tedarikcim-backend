@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString, IsOptional, IsEmail } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsEmail,
+  IsNumber,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 
@@ -52,4 +58,13 @@ export class CreateCustomerDto {
   })
   @IsOptional()
   taxNumber?: string;
+
+  @ApiProperty({
+    example: 0,
+    description: 'Balance of the customer',
+    default: 0,
+  })
+  @IsOptional()
+  @IsNumber()
+  balance?: number;
 }
