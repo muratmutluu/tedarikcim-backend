@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsEnum,
   IsNumber,
+  IsOptional,
   IsString,
   IsDateString,
   ValidateIf,
@@ -10,7 +11,7 @@ import {
 import { TransactionType } from '../entities/transaction.entity';
 import { IsTransactionFieldsValid } from '../decorators/is-transaction-fields-valid';
 
-export class CreateTransactionDto {
+export class UpdateTransactionDto {
   @ApiProperty({
     description: 'Customer ID',
     example: 1,
@@ -32,7 +33,7 @@ export class CreateTransactionDto {
     description: 'Date of the transaction',
     example: '2023-10-01',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsDateString()
   transactionDate: string;
 
@@ -40,7 +41,7 @@ export class CreateTransactionDto {
     description: 'Description of the transaction',
     example: 'Sale of goods',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   description: string;
 
@@ -49,9 +50,9 @@ export class CreateTransactionDto {
     required: false,
   })
   @ValidateIf(
-    (o: CreateTransactionDto) => o.transactionType === TransactionType.SALE,
+    (o: UpdateTransactionDto) => o.transactionType === TransactionType.SALE,
   )
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   quantity: number;
 
@@ -61,9 +62,9 @@ export class CreateTransactionDto {
     example: 'pcs',
   })
   @ValidateIf(
-    (o: CreateTransactionDto) => o.transactionType === TransactionType.SALE,
+    (o: UpdateTransactionDto) => o.transactionType === TransactionType.SALE,
   )
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   quantityUnit: string;
 
@@ -72,9 +73,9 @@ export class CreateTransactionDto {
     required: false,
   })
   @ValidateIf(
-    (o: CreateTransactionDto) => o.transactionType === TransactionType.SALE,
+    (o: UpdateTransactionDto) => o.transactionType === TransactionType.SALE,
   )
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   unitPrice: number;
 
@@ -83,9 +84,9 @@ export class CreateTransactionDto {
     required: false,
   })
   @ValidateIf(
-    (o: CreateTransactionDto) => o.transactionType === TransactionType.PAYMENT,
+    (o: UpdateTransactionDto) => o.transactionType === TransactionType.PAYMENT,
   )
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   receivedAmount: number;
 }
