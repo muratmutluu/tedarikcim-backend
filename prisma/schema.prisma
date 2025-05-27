@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name      String
+  address   String?
+  phone     String?
+  email     String?
+  taxOffice String?
+  taxNumber String?
+
+  transactions CustomerTransaction[]
+  invoices     Invoice[]
+}
+
+enum CustomerTransactionType {
+  SALE
+  PAYMENT
+}
+
+model CustomerTransaction {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactionType CustomerTransactionType
+  transactionDate DateTime
+  description     String
+  quantity        Int?
+  quantityUnit    String?
+  unitPrice       Int?
+  totalAmount     Int?
+  receivedAmount  Int?
+
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade, map: "fk_customer_transactions")
+}
+
+model Invoice {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoiceDate    DateTime
+  invoiceNumber  String
+  description    String
+  subTotalAmount Int
+  taxRate        Int
+  taxAmount      Int
+  totalAmount    Int
+
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade, map: "fk_customer_invoices")
+
+  invoiceItems InvoiceItem[]
+}
+
+model InvoiceItem {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  description String
+  quantity    Int
+  unitPrice   Int
+  totalAmount Int
+
+  invoiceId Int
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade, map: "fk_invoice_items")
+}
