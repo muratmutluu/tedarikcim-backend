@@ -11,11 +11,11 @@ import { CustomerTransactionType } from '../enums/customer-transaction-type.enum
 type TransactionFields = Pick<
   CreateCustomerTransactionDto,
   | 'transactionType'
-  | 'receivedAmount'
   | 'quantity'
   | 'quantityUnit'
   | 'unitPrice'
   | 'totalAmount'
+  | 'receivedAmount'
 >;
 
 @ValidatorConstraint({ async: false })

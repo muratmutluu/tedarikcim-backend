@@ -17,11 +17,11 @@ export const configSchema = Joi.object({
     .pattern(/^postgresql:\/\//)
     .required(),
 
-  // Authentication Secrets
-  ACCESS_TOKEN_SECRET: Joi.string().required(),
-  REFRESH_TOKEN_SECRET: Joi.string().required(),
-  ACCESS_TOKEN_EXPIRES_IN: Joi.string().default('1h'),
-  REFRESH_TOKEN_EXPIRES_IN: Joi.string().default('7d'),
+  // JWT Configuration
+  JWT_SECRET: Joi.string().required(),
+  JWT_EXPIRATION: Joi.string().default('1d'),
+  JWT_REFRESH_SECRET: Joi.string().required(),
+  JWT_REFRESH_EXPIRATION: Joi.string().default('7d'),
 
   // Swagger settings
   SWAGGER_ENABLED: Joi.boolean().default(true),

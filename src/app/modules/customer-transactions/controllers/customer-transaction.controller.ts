@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   ParseIntPipe,
@@ -12,10 +13,21 @@ import {
 import { CustomerTransactionService } from '../services/customer-transaction.service';
 import { CreateCustomerTransactionDto } from '../dtos/create-customer-transaction.dto';
 import { CustomerTransactionType } from '../enums/customer-transaction-type.enum';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { FilterTransactionsDto } from '../dtos/filter-transactions.dto';
 import { UpdateCustomerTransactionDto } from '../dtos/update-customer-transaction.dto';
+import { Roles } from 'src/app/common/decorators/roles.decorator';
+import { UserRole } from 'src/app/common/enums/user-role.enum';
+import { GetUser } from 'src/app/common/decorators/get-user.decorator';
 
+@ApiTags('Customer Transactions')
+@ApiBearerAuth('JWT-auth')
 @Controller('customer-transactions')
 export class CustomerTransactionController {
   constructor(
@@ -28,7 +40,17 @@ export class CustomerTransactionController {
     description: 'List of transactions for the customer',
   })
   @Get()
-  async findAllByCustomerId(@Query() query: FilterTransactionsDto) {
+  async findAllByCustomerId(
+    @Query() query: FilterTransactionsDto,
+    @GetUser('role') role: UserRole,
+    @GetUser('customerId') customerId: number,
+  ) {
+    if (role === UserRole.CUSTOMER && customerId !== query.customer) {
+      throw new ForbiddenException(
+        'Unauthorized access to customer transactions',
+      );
+    }
+
     return await this.customerTransactionService.findAllByCustomerId(
       query.customer,
     );
@@ -62,6 +84,7 @@ export class CustomerTransactionController {
       },
     },
   })
+  @Roles(UserRole.ADMIN)
   @Post()
   async create(
     @Body() createCustomerTransactionDto: CreateCustomerTransactionDto,
@@ -99,6 +122,7 @@ export class CustomerTransactionController {
       },
     },
   })
+  @Roles(UserRole.ADMIN)
   @Put(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -111,6 +135,7 @@ export class CustomerTransactionController {
   }
 
   @Delete(':id')
+  @Roles(UserRole.ADMIN)
   async remove(@Param('id', ParseIntPipe) id: number) {
     return await this.customerTransactionService.remove(id);
   }

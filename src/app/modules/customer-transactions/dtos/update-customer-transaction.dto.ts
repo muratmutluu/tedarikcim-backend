@@ -4,6 +4,7 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsString,
   ValidateIf,
 } from 'class-validator';
@@ -55,7 +56,7 @@ export class UpdateCustomerTransactionDto {
       o.transactionType === CustomerTransactionType.SALE,
   )
   @IsNotEmpty()
-  @IsInt()
+  @IsNumber()
   quantity: number;
 
   @ApiProperty({
@@ -80,7 +81,7 @@ export class UpdateCustomerTransactionDto {
       o.transactionType === CustomerTransactionType.SALE,
   )
   @IsNotEmpty()
-  @IsInt()
+  @IsNumber()
   unitPrice: number;
 
   @ApiProperty({
@@ -92,7 +93,7 @@ export class UpdateCustomerTransactionDto {
       o.transactionType === CustomerTransactionType.SALE,
   )
   @IsNotEmpty()
-  @IsInt()
+  @IsNumber()
   totalAmount: number;
 
   @ApiProperty({
@@ -104,6 +105,6 @@ export class UpdateCustomerTransactionDto {
       o.transactionType === CustomerTransactionType.PAYMENT,
   )
   @IsNotEmpty()
-  @IsInt()
+  @IsNumber()
   receivedAmount: number;
 }

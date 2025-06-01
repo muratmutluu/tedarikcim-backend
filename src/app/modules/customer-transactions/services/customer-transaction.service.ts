@@ -23,10 +23,11 @@ export class CustomerTransactionService {
   }
 
   async findAllByCustomerId(customerId: number) {
-    await this.customerService.findOneById(customerId);
+    const customer =
+      await this.customerService.findOneByIdWithBalance(customerId);
     const transactions = await this.prisma.customerTransaction.findMany({
       where: { customerId },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { transactionDate: 'asc' },
     });
 
     let afterBalance = 0;
@@ -42,7 +43,10 @@ export class CustomerTransactionService {
       };
     });
 
-    return transactionsWithBalance;
+    return {
+      customer,
+      transactions: transactionsWithBalance,
+    };
   }
 
   async create(createCustomerTransactionDto: CreateCustomerTransactionDto) {
@@ -59,12 +63,12 @@ export class CustomerTransactionService {
 
   async update(
     id: number,
-    updateCustomerTransactionData: UpdateCustomerTransactionDto,
+    updateCustomerTransactionDto: UpdateCustomerTransactionDto,
   ) {
     await this.findOneById(id);
     return await this.prisma.customerTransaction.update({
       where: { id },
-      data: updateCustomerTransactionData,
+      data: updateCustomerTransactionDto,
     });
   }
 

@@ -4,6 +4,7 @@ import {
   IsArray,
   IsInt,
   IsDate,
+  IsNumber,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateInvoiceItemDto } from './create-invoice-item.dto';
@@ -37,20 +38,19 @@ export class CreateInvoiceDto {
   description: string;
 
   @ApiProperty({ example: 1000.0, description: 'Subtotal amount' })
-  @IsInt()
+  @IsNumber()
   subTotalAmount: number;
 
   @ApiProperty({ example: 180.0, description: 'Tax rate' })
-  @IsInt()
+  @IsNumber()
   taxRate: number;
 
   @ApiProperty({ example: 180.0, description: 'Tax amount' })
-  @IsInt()
+  @IsNumber()
   taxAmount: number;
 
   @ApiProperty({ example: 1180.0, description: 'Total amount including tax' })
-  @IsInt()
-  @Type(() => Number)
+  @IsNumber()
   totalAmount: number;
 
   @ApiProperty({

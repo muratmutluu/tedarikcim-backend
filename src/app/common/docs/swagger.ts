@@ -29,28 +29,19 @@ export const setupSwagger = (app: INestApplication): void => {
       `http://localhost:${configService.get('PORT')}`,
       'Local Development',
     )
-    // .addTag('Authentication', 'User authentication and authorization endpoints')
-    // .addTag('Users', 'User management endpoints')
-    // .addBearerAuth(
-    //   {
-    //     type: 'http',
-    //     scheme: 'bearer',
-    //     bearerFormat: 'JWT',
-    //     name: 'JWT',
-    //     description: 'Enter JWT token',
-    //     in: 'header',
-    //   },
-    //   'JWT-auth',
-    // )
-    // .addApiKey(
-    //   {
-    //     type: 'apiKey',
-    //     name: 'X-API-KEY',
-    //     in: 'header',
-    //     description: 'API Key for authentication',
-    //   },
-    //   'api-key',
-    // )
+    .addTag('Authentication', 'User authentication and authorization endpoints')
+    .addTag('Users', 'User management endpoints')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-auth',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, options, {

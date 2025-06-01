@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsInt } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateInvoiceItemDto {
@@ -8,17 +8,17 @@ export class CreateInvoiceItemDto {
   description: string;
 
   @ApiProperty({ example: 2, description: 'Quantity of the item' })
-  @IsInt()
+  @IsNumber()
   quantity: number;
 
   @ApiProperty({ example: 50.0, description: 'Unit price of the item' })
-  @IsInt()
+  @IsNumber()
   unitPrice: number;
 
   @ApiProperty({
     example: 100.0,
     description: 'Total price (unitPrice * quantity)',
   })
-  @IsInt()
+  @IsNumber()
   totalAmount: number;
 }

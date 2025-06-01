@@ -7,7 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Customer {""
+enum Role {
+  ADMINUSER
+  CUSTOMERUSER
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  username     String  @unique
+  password     String
+  role         Role    @default(CUSTOMERUSER)
+  refreshToken String?
+
+  customerId Int?      @unique
+  customer   Customer? @relation(fields: [customerId], references: [id])
+}
+
+model Customer {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -21,6 +40,8 @@ model Customer {""
 
   transactions CustomerTransaction[]
   invoices     Invoice[]
+
+  user User?
 }
 
 enum CustomerTransactionType {
@@ -36,14 +57,52 @@ model CustomerTransaction {
   transactionType CustomerTransactionType
   transactionDate DateTime
   description     String
-  quantity        Int?
+  quantity        Float?
   quantityUnit    String?
-  unitPrice       Int?
-  totalAmount     Int?
-  receivedAmount  Int?
+  unitPrice       Float?
+  totalAmount     Float?
+  receivedAmount  Float?
 
   customerId Int
   customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade, map: "fk_customer_transactions")
+}
+
+model Supplier {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name      String
+  address   String?
+  phone     String?
+  email     String?
+  taxOffice String?
+  taxNumber String?
+
+  transactions SupplierTransaction[]
+}
+
+enum SupplierTransactionType {
+  PURCHASE
+  PAYMENT
+}
+
+model SupplierTransaction {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactionType SupplierTransactionType
+  transactionDate DateTime
+  description     String
+  quantity        Float?
+  quantityUnit    String?
+  unitPrice       Float?
+  totalAmount     Float?
+  paidAmount      Float?
+
+  supplierId Int
+  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade, map: "fk_supplier_transactions")
 }
 
 model Invoice {
@@ -54,10 +113,10 @@ model Invoice {
   invoiceDate    DateTime
   invoiceNumber  String
   description    String
-  subTotalAmount Int
-  taxRate        Int
-  taxAmount      Int
-  totalAmount    Int
+  subTotalAmount Float
+  taxRate        Float
+  taxAmount      Float
+  totalAmount    Float
 
   customerId Int
   customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade, map: "fk_customer_invoices")
@@ -71,9 +130,9 @@ model InvoiceItem {
   updatedAt DateTime @updatedAt
 
   description String
-  quantity    Int
-  unitPrice   Int
-  totalAmount Int
+  quantity    Float
+  unitPrice   Float
+  totalAmount Float
 
   invoiceId Int
   invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade, map: "fk_invoice_items")
