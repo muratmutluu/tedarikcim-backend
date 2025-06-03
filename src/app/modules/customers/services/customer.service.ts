@@ -146,4 +146,102 @@ export class CustomerService {
       receivedAmount: item._sum.receivedAmount || 0,
     }));
   }
+
+  async getCustomerDailyTransactionsAverage(customerId: number, days = 30) {
+    const startDate = subDays(new Date(), days);
+
+    const result = await this.prisma.customerTransaction.groupBy({
+      by: ['transactionDate'],
+      where: {
+        customerId,
+        transactionDate: {
+          gte: startDate,
+        },
+      },
+      _avg: {
+        totalAmount: true,
+        receivedAmount: true,
+      },
+      orderBy: {
+        transactionDate: 'asc',
+      },
+    });
+
+    return result.map((item) => ({
+      transactionDate: format(item.transactionDate, 'yyyy-MM-dd'),
+      avgTotalAmount:
+        item._avg.totalAmount !== null
+          ? Number(item._avg.totalAmount.toFixed(2))
+          : 0,
+      avgReceivedAmount:
+        item._avg.receivedAmount !== null
+          ? Number(item._avg.receivedAmount.toFixed(2))
+          : 0,
+    }));
+  }
+
+  async getCustomerMonthlyTransactionsTotal(customerId: number, year: number) {
+    const result = await this.prisma.$queryRaw<
+      {
+        month: number;
+        totalAmount: number | null;
+        receivedAmount: number | null;
+      }[]
+    >`
+    SELECT 
+      EXTRACT(MONTH FROM "transactionDate")::INT AS "month",
+      SUM("totalAmount") AS "totalAmount",
+      SUM("receivedAmount") AS "receivedAmount"
+    FROM "CustomerTransaction"
+    WHERE "customerId" = ${customerId}
+      AND EXTRACT(YEAR FROM "transactionDate") = ${year}
+    GROUP BY EXTRACT(MONTH FROM "transactionDate")
+    ORDER BY month
+  `;
+
+    return result.map((item) => ({
+      month: item.month,
+      totalAmount:
+        item.totalAmount !== null ? Number(item.totalAmount.toFixed(2)) : 0,
+      receivedAmount:
+        item.receivedAmount !== null
+          ? Number(item.receivedAmount.toFixed(2))
+          : 0,
+    }));
+  }
+
+  async getCustomerMonthlyTransactionsAverage(
+    customerId: number,
+    year: number,
+  ) {
+    const result = await this.prisma.$queryRaw<
+      {
+        month: number;
+        avgTotalAmount: number | null;
+        avgReceivedAmount: number | null;
+      }[]
+    >`
+    SELECT 
+      EXTRACT(MONTH FROM "transactionDate")::INT AS "month",
+      AVG("totalAmount") AS "avgTotalAmount",
+      AVG("receivedAmount") AS "avgReceivedAmount"
+    FROM "CustomerTransaction"
+    WHERE "customerId" = ${customerId}
+      AND EXTRACT(YEAR FROM "transactionDate") = ${year}
+    GROUP BY EXTRACT(MONTH FROM "transactionDate")
+    ORDER BY month
+  `;
+
+    return result.map((item) => ({
+      month: item.month,
+      avgTotalAmount:
+        item.avgTotalAmount !== null
+          ? Number(item.avgTotalAmount.toFixed(2))
+          : 0,
+      avgReceivedAmount:
+        item.avgReceivedAmount !== null
+          ? Number(item.avgReceivedAmount.toFixed(2))
+          : 0,
+    }));
+  }
 }

@@ -124,4 +124,29 @@ export class DashboardService {
           : 0,
     }));
   }
+
+  async getMonthlyTransactionsTotal(year: number) {
+    const result = await this.prisma.$queryRaw<
+      {
+        month: number;
+        totalAmount: number | null;
+        receivedAmount: number | null;
+      }[]
+    >`
+    SELECT 
+      EXTRACT(MONTH FROM "transactionDate")::INT AS "month",
+      SUM("totalAmount") AS "totalAmount",
+      SUM("receivedAmount") AS "receivedAmount"
+    FROM "CustomerTransaction"
+    WHERE EXTRACT(YEAR FROM "transactionDate") = ${year}
+    GROUP BY EXTRACT(MONTH FROM "transactionDate")
+    ORDER BY month
+  `;
+
+    return result.map((item) => ({
+      month: item.month,
+      totalAmount: item.totalAmount || 0,
+      receivedAmount: item.receivedAmount || 0,
+    }));
+  }
 }

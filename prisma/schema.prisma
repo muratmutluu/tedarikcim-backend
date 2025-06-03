@@ -114,8 +114,7 @@ model Invoice {
   invoiceNumber  String
   description    String
   subTotalAmount Float
-  taxRate        Float
-  taxAmount      Float
+  totalTaxAmount Float
   totalAmount    Float
 
   customerId Int
@@ -129,10 +128,14 @@ model InvoiceItem {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  description String
-  quantity    Float
-  unitPrice   Float
-  totalAmount Float
+  description        String
+  quantity           Float
+  unitPrice          Float
+  lineSubTotalAmount Float
+  lineTotalAmount    Float
+
+  taxRate   Float
+  taxAmount Float
 
   invoiceId Int
   invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade, map: "fk_invoice_items")

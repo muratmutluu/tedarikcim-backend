@@ -7,18 +7,39 @@ export class CreateInvoiceItemDto {
   @IsNotEmpty()
   description: string;
 
-  @ApiProperty({ example: 2, description: 'Quantity of the item' })
+  @ApiProperty({ example: 10, description: 'Quantity of the item' })
   @IsNumber()
   quantity: number;
 
-  @ApiProperty({ example: 50.0, description: 'Unit price of the item' })
+  @ApiProperty({ example: 100.0, description: 'Unit price of the item' })
   @IsNumber()
   unitPrice: number;
 
   @ApiProperty({
-    example: 100.0,
-    description: 'Total price (unitPrice * quantity)',
+    example: 1000.0,
+    description: 'Total without tax (unitPrice * quantity)',
   })
   @IsNumber()
-  totalAmount: number;
+  lineSubTotalAmount: number;
+
+  @ApiProperty({
+    example: 0.18,
+    description: 'Tax rate as a decimal (e.g., 0.18 for 18%)',
+  })
+  @IsNumber()
+  taxRate: number;
+
+  @ApiProperty({
+    example: 180.0,
+    description: 'Tax amount calculated from lineTotal and taxRate',
+  })
+  @IsNumber()
+  taxAmount: number;
+
+  @ApiProperty({
+    example: 1180.0,
+    description: 'Total with tax (unitPrice * quantity + taxAmount)',
+  })
+  @IsNumber()
+  lineTotalAmount: number;
 }

@@ -34,14 +34,6 @@ export class CustomerController {
     @Query('withBalance', new ParseBoolPipe({ optional: true }))
     withBalance?: boolean,
   ) {
-    console.log(
-      'findOneById called with id:',
-      id,
-      'role:',
-      role,
-      'customerId:',
-      customerId,
-    );
     if (role === UserRole.CUSTOMER && customerId !== id) {
       throw new ForbiddenException('Unauthorized access to customer data');
     }
@@ -98,6 +90,41 @@ export class CustomerController {
     return await this.customerService.getCustomerDailyTransactionsTotal(
       id,
       days,
+    );
+  }
+
+  @Get(':id/stats/daily-transactions-average')
+  async getCustomerDailyTransactionsAverage(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('days', new DefaultValuePipe(7), ParseIntPipe) days: number,
+  ) {
+    return await this.customerService.getCustomerDailyTransactionsAverage(
+      id,
+      days,
+    );
+  }
+
+  @Get(':id/stats/monthly-transactions-total')
+  async getCustomerMonthlyTransactionsTotal(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('year', new DefaultValuePipe(new Date().getFullYear()), ParseIntPipe)
+    year: number,
+  ) {
+    return await this.customerService.getCustomerMonthlyTransactionsTotal(
+      id,
+      year,
+    );
+  }
+
+  @Get(':id/stats/monthly-transactions-average')
+  async getCustomerMonthlyTransactionsAverage(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('year', new DefaultValuePipe(new Date().getFullYear()), ParseIntPipe)
+    year: number,
+  ) {
+    return await this.customerService.getCustomerMonthlyTransactionsAverage(
+      id,
+      year,
     );
   }
 }

@@ -41,13 +41,9 @@ export class CreateInvoiceDto {
   @IsNumber()
   subTotalAmount: number;
 
-  @ApiProperty({ example: 180.0, description: 'Tax rate' })
-  @IsNumber()
-  taxRate: number;
-
   @ApiProperty({ example: 180.0, description: 'Tax amount' })
   @IsNumber()
-  taxAmount: number;
+  totalTaxAmount: number;
 
   @ApiProperty({ example: 1180.0, description: 'Total amount including tax' })
   @IsNumber()

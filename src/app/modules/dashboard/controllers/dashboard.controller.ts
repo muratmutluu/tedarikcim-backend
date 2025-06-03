@@ -44,4 +44,12 @@ export class DashboardController {
   ) {
     return await this.dashboardService.getMonthlyTransactionsAverage(year);
   }
+
+  @Get('monthly-transactions-total')
+  async getMonthlyTransactionsTotal(
+    @Query('year', new DefaultValuePipe(new Date().getFullYear()), ParseIntPipe)
+    year: number,
+  ) {
+    return await this.dashboardService.getMonthlyTransactionsTotal(year);
+  }
 }

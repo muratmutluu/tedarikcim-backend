@@ -4,10 +4,13 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpExceptionFilter } from './app/common/exception/http-exception.filter';
 import { setupSwagger } from './app/common/docs/swagger';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule);
+
+  app.use(cookieParser());
 
   const configService = app.get(ConfigService);
 
@@ -38,7 +41,7 @@ async function bootstrap() {
     setupSwagger(app);
   }
 
-  app.enableCors();
+  app.enableCors({ origin: 'http://localhost:3000', credentials: true });
 
   await app.listen(port);
 
