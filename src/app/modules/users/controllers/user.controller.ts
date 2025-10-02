@@ -7,7 +7,7 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/app/common/decorators/get-user.decorator';
-import type { JwtPayload } from '../../auth/strategies/jwt.strategy';
+import { User } from '@prisma/client';
 
 @ApiTags('Users')
 @ApiBearerAuth('JWT-auth')
@@ -23,7 +23,7 @@ export class UserController {
   }
 
   @Get('me')
-  me(@GetUser() user: JwtPayload) {
+  me(@GetUser() user: User) {
     return user;
   }
 }

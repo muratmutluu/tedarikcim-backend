@@ -21,6 +21,26 @@ export class SupplierService {
     return await this.prisma.supplier.findMany();
   }
 
+  async findOneByIdWithBalance(id: number) {
+    const supplier = await this.findOneById(id);
+
+    const balanceData = await this.prisma.supplierTransaction.aggregate({
+      where: { supplierId: id },
+      _sum: {
+        totalAmount: true,
+        paidAmount: true,
+      },
+    });
+
+    const balance =
+      (balanceData._sum.totalAmount || 0) - (balanceData._sum.paidAmount || 0);
+
+    return {
+      ...supplier,
+      balance,
+    };
+  }
+
   async findAllWithBalance() {
     const suppliers = await this.prisma.supplier.findMany();
     const balances = await this.prisma.supplierTransaction.groupBy({

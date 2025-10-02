@@ -23,7 +23,8 @@ export class SupplierTransactionService {
   }
 
   async findAllBySupplierId(supplierId: number) {
-    await this.supplierService.findOneById(supplierId);
+    const supplier =
+      await this.supplierService.findOneByIdWithBalance(supplierId);
     const transactions = await this.prisma.supplierTransaction.findMany({
       where: { supplierId },
       orderBy: { createdAt: 'asc' },
@@ -42,7 +43,10 @@ export class SupplierTransactionService {
       };
     });
 
-    return transactionsWithBalance;
+    return {
+      supplier,
+      transactions: transactionsWithBalance,
+    };
   }
 
   async create(createSupplierTransactionDto: CreateSupplierTransactionDto) {
